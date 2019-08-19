@@ -44,7 +44,7 @@ public class FileManagerAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         if (viewHolder instanceof BackViewHolder) {
             BackViewHolder holder = (BackViewHolder) viewHolder;
-            holder.ivFileType.setImageResource(R.drawable.folder);
+            holder.ivFileType.setImageResource(R.drawable.back);
             holder.tvFileName.setText("返回上一级");
         } else if (viewHolder instanceof FileManagerViewHolder) {
             FileManagerViewHolder holder = (FileManagerViewHolder) viewHolder;

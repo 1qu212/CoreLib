@@ -24,15 +24,17 @@ import static cn.xydzjnq.libcore.util.ConfigSPUtils.LASTFILEPATH;
 
 public class FileManagerActivity extends BaseActivity {
     private static final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1;
+    public static final String ISSELECTFOLDER = "isSelectFolder";
     public static final String EXTRAPATH = "extraPath";
     private static final String ROOTPATH = "/storage";
-    public static final int RESULTCODE = 0;
+    public static final int RESULTCODE = 200;
     public static final String SELECTEDPATH = "selectedPath";
     private TextView tvPath;
     private RecyclerView rvFileName;
     private TextView tvOk;
     private TextView tvCancel;
     private String extraPath;
+    private boolean isSelectFolder;
     private FileManagerAdapter fileManagerAdapter;
     private String path;
 
@@ -40,8 +42,12 @@ public class FileManagerActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         extraPath = getIntent().getStringExtra(EXTRAPATH);
+        isSelectFolder = getIntent().getBooleanExtra(ISSELECTFOLDER, false);
         setContentView(R.layout.activity_file_manager);
         initView();
+        if (isSelectFolder) {
+            tvOk.setVisibility(View.VISIBLE);
+        }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission to access the location is missing.
@@ -52,6 +58,16 @@ public class FileManagerActivity extends BaseActivity {
         } else {
             permissonGrant();
         }
+        tvOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConfigSPUtils.putString(FileManagerActivity.this, LASTFILEPATH, path);
+                Intent intent = new Intent();
+                intent.putExtra(SELECTEDPATH, path);
+                setResult(RESULTCODE, intent);
+                finish();
+            }
+        });
         tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
